@@ -71,10 +71,23 @@ class ReservationController extends Controller
             'location' => $locations,
             'user' => $this->auth->user(),
         ]);
-
         $this->db->persist($appointment);
         $this->db->flush();
         return $appointment;
+    }
+
+    function getAppointments(ServerRequestInterface $request): ResponseInterface
+    {
+        $appointment = $this->db->getRepository(Appointment::class)->findBy([
+            'date' => \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']),
+        ]);
+        $appointments=[];
+        foreach ($appointment as $key=>$appointmentChild){
+            $appointments[$key] = [
+                'name' => $appointment[0]->user->name,
+            ];
+        }
+        return new Response\JsonResponse($appointments);
     }
 
     /**

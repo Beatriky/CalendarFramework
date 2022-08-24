@@ -23,6 +23,8 @@ $router->group('', function (RouteGroup $router) {
 
     $router->post('/reservation', [ReservationController::class, 'store'])->setName('reservation.store');
 
+    $router->post('/requestAppointments', [ReservationController::class, 'getAppointments']);
+
 
    // $router->get('/appointment', [ReservationController::class, 'index'])->setName('appointment');
    // $router->post('/appointment', [ReservationController::class, 'store'])->setName('appointment.store');

@@ -24,7 +24,7 @@ class HomeController
         $getParams = $request->getQueryParams();
         if (array_key_exists("date", $getParams)) {
             $date = $getParams['date'];
-          // $locations = $this->db->getRepository(Location::class)->matching(Criteria::create()->where(Criteria::expr()->eq('date', \Datetime::createFromFormat('Y-m-d', $date))))->getValues();
+            // $locations = $this->db->getRepository(Location::class)->matching(Criteria::create()->where(Criteria::expr()->eq('date', \Datetime::createFromFormat('Y-m-d', $date))))->getValues();
         }
 
         $locations = $this->db->getRepository(Location::class)->findAll();

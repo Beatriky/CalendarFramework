@@ -13,7 +13,6 @@ abstract class BaseEntity
         if (property_exists($this, $property)) {
             return $this->{$property};
         }
-
         return null;
     }
 
@@ -36,7 +35,6 @@ abstract class BaseEntity
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
         }
-
         return true;
     }
 
@@ -45,7 +43,6 @@ abstract class BaseEntity
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
         }
-
         return $this;
     }
 }

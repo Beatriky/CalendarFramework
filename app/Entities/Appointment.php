@@ -17,8 +17,8 @@ class Appointment extends \App\Entities\BaseEntity
     #[ORM\Id, ORM\GeneratedValue(strategy: 'AUTO')]
     protected int $id;
 
-    #[ORM\Column(name: 'date', type: Types::STRING, length: 255, nullable: false)]
-    protected string $date;
+    #[ORM\Column(name: 'date', type: Types::DATE_MUTABLE, length: 255, nullable: false)]
+    protected \DateTime $date;
 
     #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: 'appointments')]
     #[ORM\JoinColumn(name: 'idLocation', referencedColumnName: 'id', nullable: false)]

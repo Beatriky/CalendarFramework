@@ -58,10 +58,8 @@
             <input type="text" id="selectedDateForm" name="date">
             <input type="submit" value="submit" id="selectedDateSubmit">
         </form>
-{#        {{ dump() }}#}
-        {%  for appointment in appointments %}
-            <p>{{ appointment.user.name }}</p><p> {{ appointment.location.city }} : {{ appointment.location.address }}</p>
-        {% endfor %}
+{#       {{ dump() }}#}
+        <div id="appointments"></div>
 
         <div class="flex-col py-12 sm:px-5 lg:px-10">
             <h1 id="schedule" class="schedule"> Hello! There is nothing scheduled for today!</h1>
@@ -72,7 +70,7 @@
             <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     <form class="space-y-6" action="{{ route('reservation.store') }}" method="POST">
-                        <input type="hidden" name="{{ constant('SESSION_KEY', csrf) }}" value="{{ csrf.token }}">
+                        <input type="hidden" id="_token" name="{{ constant('SESSION_KEY', csrf) }}" value="{{ csrf.token }}">
                         <div>
                             <label for="location" class="block text-sm font-medium text-gray-700"> Location </label>
                             <div class="mt-1">

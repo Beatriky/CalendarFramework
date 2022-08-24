@@ -118,7 +118,7 @@ nextButton.onclick = function () {
     document.getElementById('next').addEventListener('click', event => {
         next();
         refillSelectedDay(year, month, currentDay);
-      //  dateURL();
+        //  dateURL();
     });
 
 };
@@ -126,7 +126,7 @@ previousButton.onclick = function () {
     document.getElementById('prev').addEventListener('click', event => {
         previous();
         refillSelectedDay(year, month, currentDay);
-       // dateURL();
+        // dateURL();
     });
 };
 
@@ -209,11 +209,10 @@ function eventActivator() {
             let monthText = event.target.dataset.month;
             let yearText = event.target.dataset.year;
             document.getElementById('schedule').innerText = " Schedule for " + dataText + " " + months[month] + ' ' + yearText;
-            selectedDate = dataText + '/' + monthText + '/' + yearText;
-
-            console.log(selectedDate);
+            selectedDate = dataText + '-' + monthText + '-' + yearText;
 
             refillSelectedDay(yearText, monthText, dataText);
+            sendAxios(yearText + '-' + Number(Number(monthText)+1) + '-' + dataText, document.getElementById('location').value);
             //dateURL();
         })
     })
@@ -222,10 +221,23 @@ function eventActivator() {
 
 console.log(document.getElementById('locationID').value);
 
-function sendAxios() {
-    let params = new URLSearchParams();
-    params.append('parameter', 'value');
-    axios.get('/.php', params).then(response => {
-        console.log(response)
+function sendAxios(datex, location) {
+    const data = new FormData();
+    data.set('date', datex);
+    data.set('location', location);
+    data.set('_token', document.getElementById('_token').value);
+    axios.post('/requestAppointments',
+        data,
+    ).then(response => {
+        document.getElementById('appointments').innerHTML = '';
+        console.log(response.data)
+        if (response.data.length===0){
+            document.getElementById('appointments').innerHTML = '';
+        } else {
+            for (let i=0; i<=response.data.length; i++) {
+                document.getElementById('appointments').innerHTML += response.data[i].name;
+                console.log(response.data[i].name)
+            }
+        }
     });
 }

@@ -9,7 +9,7 @@ use App\Session\SessionStore;
 class Csrf
 {
     public const SESSION_KEY = '_token';
-
+//pus pe true
     protected bool $persistToken = true;
 
     public function __construct(protected SessionStore $session)
