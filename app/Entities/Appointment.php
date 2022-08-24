@@ -1,6 +1,6 @@
 <?php
 
-namespace App\app\Entities;
+namespace App\Entities;
 
 use App\Entities\BaseEntity;
 use App\Entities\Location;
@@ -20,14 +20,11 @@ class Appointment extends \App\Entities\BaseEntity
     #[ORM\Column(name: 'date', type: Types::STRING, length: 255, nullable: false)]
     protected string $date;
 
-    #[ORM\Column(name: 'city', type: Types::STRING, length: 255, nullable: false)]
-    protected string $city;
-
-    #[ORM\ManyToOne(targetEntity: Location::class, fetch: 'eager', inversedBy: 'appointments')]
+    #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: 'appointments')]
     #[ORM\JoinColumn(name: 'idLocation', referencedColumnName: 'id', nullable: false)]
     protected Location $location;
 
-    #[ORM\ManyToOne(targetEntity: User::class,fetch: 'eager', inversedBy: 'appointments')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'appointments')]
     #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'id', nullable: false)]
     protected User $user;
 }

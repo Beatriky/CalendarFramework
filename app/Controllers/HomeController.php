@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Entities\Location;
+use App\Session\Flash;
 use App\Views\View;
 use Doctrine\ORM\EntityManager;
 use Laminas\Diactoros\Response;
@@ -19,6 +20,7 @@ class HomeController
 
     public function index(ServerRequestInterface $request): ResponseInterface
     {
+
         $getParams = $request->getQueryParams();
         if (array_key_exists("date", $getParams)) {
             $date = $getParams['date'];

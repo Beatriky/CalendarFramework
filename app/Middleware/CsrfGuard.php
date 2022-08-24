@@ -38,6 +38,6 @@ class CsrfGuard implements MiddlewareInterface
 
     protected function requestRequiresProtection(ServerRequestInterface $request): bool
     {
-        return in_array($request->getMethod(), [ 'PUT', 'DELETE', 'PATCH']);
+        return in_array($request->getMethod(), [ 'POST','PUT', 'DELETE', 'PATCH']);
     }
 }

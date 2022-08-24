@@ -23,7 +23,6 @@ abstract class BaseEntity
             $this->{$property} = $value;
             return $this;
         }
-
         throw new UnexpectedValueException("Property $property does not exist");
     }
 
