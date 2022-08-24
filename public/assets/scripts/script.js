@@ -212,7 +212,7 @@ function eventActivator() {
             selectedDate = dataText + '-' + monthText + '-' + yearText;
 
             refillSelectedDay(yearText, monthText, dataText);
-            sendAxios(yearText + '-' + Number(Number(monthText)+1) + '-' + dataText, document.getElementById('location').value);
+            sendAxios(yearText + '-' + Number(Number(monthText) + 1) + '-' + dataText, document.getElementById('location').value);
             //dateURL();
         })
     })
@@ -231,12 +231,13 @@ function sendAxios(datex, location) {
     ).then(response => {
         document.getElementById('appointments').innerHTML = '';
         console.log(response.data)
-        if (response.data.length===0){
+        if (response.data.length === 0) {
             document.getElementById('appointments').innerHTML = '';
         } else {
-            for (let i=0; i<=response.data.length; i++) {
-                document.getElementById('appointments').innerHTML += response.data[i].name+" ";
-                document.getElementById('appointments').innerHTML += response.location+" ";
+            console.log(response.data)
+            for (let i = 0; i <= response.data.length; i++) {
+                document.getElementById('appointments').innerHTML += response.data[i].name + " ";
+                document.getElementById('appointments').innerHTML += response.data[i].location_name + " ";
 
                 console.log(response.data[i])
             }

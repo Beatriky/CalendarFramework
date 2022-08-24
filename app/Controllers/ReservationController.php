@@ -78,17 +78,18 @@ class ReservationController extends Controller
 
     function getAppointments(ServerRequestInterface $request): ResponseInterface
     {
-        $appointment = $this->db->getRepository(Appointment::class)->findBy([
+        $appointments = $this->db->getRepository(Appointment::class)->findBy([
             'date' => \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']),
         ]);
-        $appointments=[];
-        foreach ($appointment as $key=>$appointmentChild){
-            $appointments[$key] = [
-                'name' => $appointment[0]->user->name,
-                'location'=>$appointment[0]->location->city,
+        $preparedAppointments = [];
+        foreach ($appointments as $appointment) {
+            $preparedAppointments[] = [
+                'name' => $appointment->user->name,
+                'location_name' => $appointment->location->city,
             ];
         }
-        return new Response\JsonResponse($appointments);
+
+        return new Response\JsonResponse($preparedAppointments);
     }
 
     /**
