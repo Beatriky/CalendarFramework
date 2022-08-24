@@ -67,7 +67,7 @@ class ReservationController extends Controller
         $locations = $this->db->getRepository(Location::class)->find($data['location']);
         $reservationDate = \DateTime::createFromFormat('Y-m-d', $data['date']);
         $appointment->fill([
-            'date' => $reservationDate->format('Y-m-d'),
+            'date' => $reservationDate, //->format('Y-m-d'),
             'location' => $locations,
             'user' => $this->auth->user(),
         ]);
@@ -85,6 +85,7 @@ class ReservationController extends Controller
         foreach ($appointment as $key=>$appointmentChild){
             $appointments[$key] = [
                 'name' => $appointment[0]->user->name,
+                'location'=>$appointment[0]->location->city,
             ];
         }
         return new Response\JsonResponse($appointments);

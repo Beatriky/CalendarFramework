@@ -235,8 +235,10 @@ function sendAxios(datex, location) {
             document.getElementById('appointments').innerHTML = '';
         } else {
             for (let i=0; i<=response.data.length; i++) {
-                document.getElementById('appointments').innerHTML += response.data[i].name;
-                console.log(response.data[i].name)
+                document.getElementById('appointments').innerHTML += response.data[i].name+" ";
+                document.getElementById('appointments').innerHTML += response.location+" ";
+
+                console.log(response.data[i])
             }
         }
     });
