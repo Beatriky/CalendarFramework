@@ -5,7 +5,9 @@ namespace App\Controllers;
 use App\app\Entities\Appointment;
 use App\Auth\Auth;
 use App\Entities\Location;
+use App\Exceptions\ValidationException;
 use App\Views\View;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
@@ -23,22 +25,27 @@ class ReservationController extends Controller
 
     public function index(ServerRequestInterface $request): ResponseInterface
     {
+        $insertedDate = $request->getQueryParams()['selectedDateForm'];
+        $appointments = $this->db->getRepository(Appointment::class)->matching(
+            Criteria::create()->where(Criteria::expr()->eq('date', new \DateTime($insertedDate)))
+        )->getValues();
         $locations = $this->db->getRepository(Location::class)->findAll();
-        return $this->view->render(new Response, '/home.twig', ['locations' => $locations]);
-        // ($request->getQueryParams());
+
+       // dd($appointments[0]->getUser());
+
+        return $this->view->render(new Response, '/home.twig', ['appointment' => $locations]);
     }
 
+    /**
+     * @throws OptimisticLockException
+     * @throws ORMException
+     * @throws ValidationException
+     */
     public function store(ServerRequestInterface $request): ResponseInterface
     {
-        try {
-            $data = $this->validateAppointment($request);
-        } catch (Exception $ex) {
-            dd($ex);
-        }
-
-        dd($data);
+       // dd("asd");
+        $data = $this->validateAppointment($request);
         $this->createAppointment($data);
-        //return redirect($this->router->getNamedRoute('reservation')->getPath());
         return redirect($this->router->getNamedRoute('home')->getPath());
     }
 
@@ -51,17 +58,18 @@ class ReservationController extends Controller
         $appointment = new Appointment();
         $locations = $this->db->getRepository(Location::class)->findAll();
         $reservationDate = \DateTime::createFromFormat('Y-m-d', $data['date']);
-
         $appointment->fill([
-            'appointment' => $reservationDate,
+            'appointments' => $reservationDate,
             'locations' => $locations[$data['locations']],
-            'user' => $this->auth->user()
+            'users' => $this->auth->user()
         ]);
         $this->db->persist($appointment);
         $this->db->flush();
         return $appointment;
     }
-
+    /**
+     * @throws ValidationException
+     */
     private function validateAppointment(ServerRequestInterface $request): array
     {
         return $this->validate($request, ['locations' => ['required'], 'date' => ['required']]);

@@ -23,51 +23,83 @@
                     <li>Sa</li>
                 </ul>
                 <ul id="days" class="days"></ul>
-
+                <form class="form-inline">
+                    <label class="lead mr-2 ml-2" for="month">Jump To: </label>
+                    <select class="form-control col-sm-4" name="monthSelect" id="monthSelect" onchange="jump()">
+                        <option value=0>Jan</option>
+                        <option value=1>Feb</option>
+                        <option value=2>Mar</option>
+                        <option value=3>Apr</option>
+                        <option value=4>May</option>
+                        <option value=5>Jun</option>
+                        <option value=6>Jul</option>
+                        <option value=7>Aug</option>
+                        <option value=8>Sep</option>
+                        <option value=9>Oct</option>
+                        <option value=10>Nov</option>
+                        <option value=11>Dec</option>
+                    </select>
+                    <label for="year"></label><select class="form-control col-sm-4" name="yearSelect" id="yearSelect"
+                                                      onchange="jump()">
+                        <option value=2022>2022</option>
+                        <option value=2023>2023</option>
+                        <option value=2024>2024</option>
+                        <option value=2025>2025</option>
+                        <option value=2026>2026</option>
+                        <option value=2027>2027</option>
+                        <option value=2028>2028</option>
+                        <option value=2029>2029</option>
+                        <option value=2030>2030</option>
+                    </select></form>
             </div>
         </box>
 
-{#        <form method="GET" id="GetForm" style="visibility: hidden">#}
-{#            <input type="text" id="selectedDateForm" name="date">#}
-{#            <input type="text" id="selectedLocationForm" name="location">#}
-{#            <input type="submit" value="submit" id="selectedDateSubmit">#}
-{#        </form>#}
+        <form method="GET" id="GetForm" style="visibility: hidden">
+            <input type="text" id="selectedDateForm" name="date">
+            <input type="submit" value="submit" id="selectedDateSubmit">
+        </form>
+{#        {{ dump() }}#}
+        {%  for appointment in appointments %}
+            <p>{{ appointment.user.name }}</p><p> {{ appointment.location.city }} : {{ appointment.location.address }}</p>
+        {% endfor %}
 
-        <box class="boxuser">
-            <h1 id="schedule" class="schedule">Hello! There is nothing scheduled for today!</h1>
-            <ul id="profileID" class="profiles">
-                <li class="people-list"></li>
-            </ul>
-        </box>
-        <div class="flex flex-col justify-center py-44 sm:px-6 lg:px-8">
+        <div class="flex-col py-12 sm:px-5 lg:px-10">
+            <h1 id="schedule" class="schedule"> Hello! There is nothing scheduled for today!</h1>
             <div class="sm:mx-auto sm:w-full sm:max-w-md">
                 <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Make an appointment</h2>
             </div>
+
             <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-{#                    <form class="space-y-6" action="{{ route('reservation.store') }}" method="POST">#}
-{#                        <input type="hidden" name="{{ constant('SESSION_KEY', csrf) }}" value="{{ csrf.token }}">#}
-{#                        <div>#}
-{#                            <label for="locations" class="block text-sm font-medium text-gray-700"> Location </label>#}
-{#                            <div class="mt-1">#}
-{#                                <select name="locations" id="locationID" form="locationForm">#}
-{#                                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md#}
-{#                                    shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500#}
-{#                                    focus:border-indigo-500 sm:text-sm">#}
-{#                                    {% for location in locations %}#}
-{#                                        <option>{{ location.city }} - {{ location.address }}</option>#}
-{#                                    {% endfor %}#}
-{#                                </select>#}
-{#                            </div>#}
-{#                        </div>#}
-
-{#                        <div>#}
-{#                            <button type="submit" value="submit"#}
-{#                                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">#}
-{#                                Reserve#}
-{#                            </button>#}
-{#                        </div>#}
-{#                    </form>#}
+                    <form class="space-y-6" action="{{ route('reservation.store') }}" method="POST">
+                        <input type="hidden" name="{{ constant('SESSION_KEY', csrf) }}" value="{{ csrf.token }}">
+                        <div>
+                            <label for="locations" class="block text-sm font-medium text-gray-700"> Location </label>
+                            <div class="mt-1">
+                                <select name="locations" id="locationID" form="locationForm" value="Location">
+                                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md
+                                    shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500
+                                    focus:border-indigo-500 sm:text-sm">
+                                    {% for location in locations %}
+                                        <option>{{ location.city }} - {{ location.address }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="date" class="block text-sm font-medium text-gray-700"> Date </label>
+                            <div class="mt-1">
+                                <input id="dateForm" name="date" type="date"
+                                       class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" value="submit" formmethod="POST"
+                                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Reserve
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

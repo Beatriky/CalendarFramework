@@ -1,16 +1,16 @@
 // getting the actual date
 let today = new Date();
-let dayInt = today.getDate();
+let currentDay = today.getDate();
 let month = today.getMonth();
-
 let monthPlus = month + 1;
-
 let year = today.getFullYear();
 let calendarBody = document.getElementById("days");
 //url
 let documentURL = new URL(window.location.href);
+console.log(currentDay);
 let urlLocation = documentURL.searchParams.get('location');
 let urlDate = documentURL.searchParams.get('date');
+
 let months = [
     "January",
     "February",
@@ -27,22 +27,22 @@ let months = [
 ];
 let selectedDate;
 
-function refillSelectedDay(year, month, day) {
-    selectedDate = year + "-" + month + "-" + day;
-}
-
+// let dateAptElement = document.getElementById("dateForm");
+// dateAptElement.min = moment().format("YYYY-MM-DD");
+// dateAptElement.value = moment().format("YYYY-MM-DD");
 console.log(urlDate);
-console.log(month+1);
 
-if (urlLocation !== null) {
-    let parent = document.getElementById('locationID');
-    let children = parent.querySelectorAll('*');
-    children.forEach(child => {
-        if (child.value == urlLocation) {
-            child.setAttribute('selected', 'selected');
-        }
-    })
-}
+console.log(month + 1);
+
+// if (urlLocation !== null) {
+//     let parent = document.getElementById('locationID');
+//     let children = parent.querySelectorAll('*');
+//     children.forEach(child => {
+//         if (child.value == urlLocation) {
+//             child.setAttribute('selected', 'selected');
+//         }
+//     })
+// }
 
 if (urlDate !== null) {
     let dateSplit = urlDate.split('-');
@@ -50,31 +50,31 @@ if (urlDate !== null) {
     let monthText = dateSplit[1];
     let yearText = dateSplit[0];
     document.getElementById('schedule').innerText = "Schedule for " + dataText + " " + months[monthText] + ' ' + yearText;
-    dayInt = dataText;
+    currentDay = dataText;
     month = monthText;
     year = yearText;
 } else {
-    document.getElementById('schedule').innerText = "Schedule for " + dayInt + " " + months[month] + ' ' + year;
+    document.getElementById('schedule').innerText = "Schedule for " + currentDay + " " + months[month] + ' ' + year;
 }
 
 function dateURL() {
     document.getElementById('selectedDateForm').value = selectedDate;
     document.getElementById('selectedDateSubmit').click();
 }
+
+
 function showCalendar(month, year) {
     let firstDay = (new Date(year, month)).getDay();
     calendarBody.innerHTML = "";
     let totalDays = daysInMonth(month, year);
-
     blankDates(firstDay);
-
     for (let day = 1; day <= totalDays; day++) {
         let cell = document.createElement("li");
         let cellText = document.createTextNode(day);
-        if (day == dayInt) {
+        if (day == currentDay) {
             cell.classList.add('active');
         }
-        if (dayInt === day &&
+        if (currentDay === day &&
             month === today.getMonth() &&
             year === today.getFullYear()) {
             cell.classList.add("active");
@@ -106,48 +106,61 @@ function blankDates(count) {
     }
 }
 
-// next and previous buttons
-let nextbtn = document.getElementById("next");
-let prevBtn = document.getElementById("prev");
+function refillSelectedDay(year, month, day) {
+    selectedDate = year + "-" + month + "-" + day;
+}
 
-nextbtn.onclick = function () {
+// next and previous buttons
+let nextButton = document.getElementById("next");
+let previousButton = document.getElementById("prev");
+
+nextButton.onclick = function () {
     document.getElementById('next').addEventListener('click', event => {
         next();
-        refillSelectedDay(year, month, dayInt);
-        dateURL();
+        refillSelectedDay(year, month, currentDay);
+      //  dateURL();
     });
 
 };
-prevBtn.onclick = function () {
+previousButton.onclick = function () {
     document.getElementById('prev').addEventListener('click', event => {
         previous();
-        refillSelectedDay(year, month, dayInt);
-        dateURL();
+        refillSelectedDay(year, month, currentDay);
+       // dateURL();
     });
 };
 
 function next() {
-    if (month == 11) {
-        month = 0;
-        year++;
-    } else {
-        month++;
-    }
-    // year = month === 11 ? year+1 : year;
-    // month = (month + 1) % 12;
-    //showCalendar(month, year);
+    year = month === 11 ? year + 1 : year;
+    month = (month + 1) % 12;
+    // if (month == 11) {
+    //     month = 0;
+    //     year++;
+    // } else {
+    //     month++;
+    // }
+    showCalendar(month, year);
 }
 
 function previous() {
-    if (month == 0) {
-        month = 11;
-        year--;
-    } else {
-        month--;
-    }
-    // year = month === 0 ? year - 1 : year;
-    // month = month === 0 ? 11 : month - 1;
-    //showCalendar(month, year);
+    // if (month == 0) {
+    //     month = 11;
+    //     year--;
+    // } else {
+    //     month--;
+    // }
+    year = month === 0 ? year - 1 : year;
+    month = month === 0 ? 11 : month - 1;
+    showCalendar(month, year);
+}
+
+let optionMonth = document.getElementById("monthSelect");
+let optionYear = document.getElementById("yearSelect");
+
+function jump() {
+    year = parseInt(optionYear.value);
+    month = parseInt(optionMonth.value);
+    showCalendar(month, year);
 }
 
 //calling/initializing calendar
@@ -184,25 +197,28 @@ function renderCalendar(year, month) {
             }
         }
     }
+
 }
 
 function eventActivator() {
     const daysVar = document.querySelectorAll(".singleDay");
     daysVar.forEach(item => {
         item.addEventListener('click', event => {
-            document.getElementById('selectedLocationForm').value = document.getElementById('locationID').value;
-            document.getElementById('selectedDateSubmit').click();
+            //document.getElementById('selectedDateSubmit').click();
             let dataText = event.target.dataset.day;
             let monthText = event.target.dataset.month;
             let yearText = event.target.dataset.year;
-            document.getElementById('schedule').innerText = "Schedule for " + dataText + " " + months[month] + ' ' + yearText;
-            //  selectedDate=dataText+'/'+monthText
-            console.log(dataText, months[month], yearText);
+            document.getElementById('schedule').innerText = " Schedule for " + dataText + " " + months[month] + ' ' + yearText;
+            selectedDate = dataText + '/' + monthText + '/' + yearText;
+
+            console.log(selectedDate);
+
             refillSelectedDay(yearText, monthText, dataText);
-            dateURL();
+            //dateURL();
         })
     })
 }
+
 
 console.log(document.getElementById('locationID').value);
 

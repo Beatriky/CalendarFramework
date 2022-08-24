@@ -44,11 +44,11 @@ require_once base_path('routes/web.php');
 try {
     $response = $router->dispatch($container->get('request'));
 } catch (Exception $exception) {
+   // dd($exception);
     $response = (new Handler(
         $exception,
         $container->get(SessionStore::class),
         $container->get(View::class),
     ))->respond();
 }
-
 $container->get('emitter')->emit($response);

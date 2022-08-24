@@ -19,9 +19,13 @@ $router->group('', function (RouteGroup $router) {
 
     $router->post('/logout', [LogoutController::class, 'logout'])->setName('logout');
 
-   // $router->get('/reservation', [ReservationController::class, 'index'])->setName('reservation');
+  //  $router->post('/reservation-test', [ReservationController::class, 'store'])->setName('reservation.twig');
 
     $router->post('/reservation', [ReservationController::class, 'store'])->setName('reservation.store');
+
+
+   // $router->get('/appointment', [ReservationController::class, 'index'])->setName('appointment');
+   // $router->post('/appointment', [ReservationController::class, 'store'])->setName('appointment.store');
 
 })->middleware($container->get(Authenticated::class));
 

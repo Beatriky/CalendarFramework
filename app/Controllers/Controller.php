@@ -10,6 +10,9 @@ use Valitron\Validator;
 
 abstract class Controller
 {
+    /**
+     * @throws ValidationException
+     */
     public function validate(ServerRequestInterface $request, array $rules): array
     {
         $validator = new Validator($request->getParsedBody());
@@ -19,7 +22,7 @@ abstract class Controller
         if (!$validator->validate()) {
             throw new ValidationException($request, $validator->errors());
         }
-
         return $request->getParsedBody();
     }
 }
+

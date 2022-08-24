@@ -1,0 +1,7 @@
+<form action="reservation-test" method="POST">
+    <input type="hidden" name="{{ constant('SESSION_KEY', csrf) }}" value="{{ csrf.token }}">
+
+    <button type="submit" value="submit" formmethod="POST">
+        Button
+    </button>
+</form>
