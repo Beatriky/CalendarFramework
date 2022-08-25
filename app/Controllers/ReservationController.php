@@ -98,13 +98,15 @@ class ReservationController extends Controller
         $appointmentByLoggedInUser = $this->db->getRepository(Appointment::class)->count(['user' => $this->auth->user(),
             'date' => \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']),
         ]);
-        if ($appointmentByLoggedInUser > 0 || (date('Y-m-d') <= \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']))) {
+        if ($appointmentByLoggedInUser > 0) //|| (date('Y-m-d') <= \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']))) {
+        {
             $this->flash->now('error', 'Select a future day');
+            if ((date('Y-m-d') <= \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']))) {
+                $this->flash->now('error', 'You already have an appointment on this day ');
+                return false;
+            }
             return false;
         }
-//            $this->flash->now('error','You already have an appointment on this day ');
-//            return false;
-//        }
         return true;
     }
 
