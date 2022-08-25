@@ -26,7 +26,6 @@ class HomeController
             $date = $getParams['date'];
             // $locations = $this->db->getRepository(Location::class)->matching(Criteria::create()->where(Criteria::expr()->eq('date', \Datetime::createFromFormat('Y-m-d', $date))))->getValues();
         }
-
         $locations = $this->db->getRepository(Location::class)->findAll();
         return $this->view->render(new Response, 'home.twig', ['locations' => $locations]);
     }

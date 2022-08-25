@@ -238,7 +238,7 @@ function sendAxios(datex, location) {
             for (let i = 0; i <= response.data.length; i++) {
                 document.getElementById('appointments').innerHTML += response.data[i].name + " ";
                 document.getElementById('appointments').innerHTML += response.data[i].location_name + " ";
-
+                document.getElementById('appointments').innerHTML += response.data[i].location_address + " ";
                 console.log(response.data[i])
             }
         }
