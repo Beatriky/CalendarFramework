@@ -68,7 +68,7 @@ class ReservationController extends Controller
 
 
         $appointment->fill([
-            'date' => $reservationDate, //->format('Y-m-d'),
+            'date' => $reservationDate,
             'location' => $locations,
             'user' => $this->auth->user(),
         ]);
@@ -95,16 +95,17 @@ class ReservationController extends Controller
 
     private function validateDate(array $data, ServerRequestInterface $request): bool
     {
+        $today = date('Y-m-d');
+        $reservationDate = \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']);
+
         $appointmentByLoggedInUser = $this->db->getRepository(Appointment::class)->count(['user' => $this->auth->user(),
-            'date' => \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']),
-        ]);
-        if ($appointmentByLoggedInUser > 0) //|| (date('Y-m-d') <= \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']))) {
-        {
+            'date' => \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']),]);
+        if ($appointmentByLoggedInUser > 0) {
+            $this->flash->now('error', 'You already have an appointment on this day ');
+            return false;
+        }
+        if ($reservationDate > $today) {
             $this->flash->now('error', 'Select a future day');
-            if ((date('Y-m-d') <= \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']))) {
-                $this->flash->now('error', 'You already have an appointment on this day ');
-                return false;
-            }
             return false;
         }
         return true;
