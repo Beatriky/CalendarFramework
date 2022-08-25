@@ -35,16 +35,12 @@ class ReservationController extends Controller
             Criteria::create()->where(Criteria::expr()->eq('date', new \DateTime($insertedDate)))
         )->getValues();
         $locations = $this->db->getRepository(Location::class)->findAll();
-
-        // dd($appointments[0]->getUser());
-
         return $this->view->render(new Response, '/home.twig', ['appointment' => $locations]);
     }
 
     /**
      * @throws OptimisticLockException
      * @throws ORMException
-     * @throws ValidationException
      */
     public function store(ServerRequestInterface $request): ResponseInterface
     {
@@ -54,10 +50,9 @@ class ReservationController extends Controller
             dd($exception);
         }
 
-        if ($this->validateDate($data,$request)) {
+        if ($this->validateDate($data, $request)) {
             $this->createAppointment($data);
         }
-
         return redirect($this->router->getNamedRoute('home')->getPath());
     }
 
@@ -77,7 +72,6 @@ class ReservationController extends Controller
             'location' => $locations,
             'user' => $this->auth->user(),
         ]);
-
         $this->db->persist($appointment);
         $this->db->flush();
         return new Response\JsonResponse(true);
@@ -96,38 +90,30 @@ class ReservationController extends Controller
                 'location_address' => $appointment->location->address,
             ];
         }
-
         return new Response\JsonResponse($preparedAppointments);
     }
 
     private function validateDate(array $data, ServerRequestInterface $request): bool
     {
-//          if( date('Y-m-d') <= \DateTime::createFromFormat('Y-m-d',  $request->getParsedBody()['date'])) {
-////            $locations = $this->db->getRepository(Location::class)->find(['id' => $reqParsed['idLocation']]);
-//          }
-//        $appointments = $this->db->getRepository(Appointment::class)->findBy([
-//            'date' => \DateTime::createFromFormat('Y-m-d', $data['date']),
-//        ]);
-//        $today = date('Y-m-d');
-        //return true;
         $appointmentByLoggedInUser = $this->db->getRepository(Appointment::class)->count(['user' => $this->auth->user(),
             'date' => \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']),
         ]);
-
-        if ($appointmentByLoggedInUser > 0) {
-            if( date('Y-m-d') > \DateTime::createFromFormat('Y-m-d',  $request->getParsedBody()['date'])){
-                return false;
-            }
+        if ($appointmentByLoggedInUser > 0 || (date('Y-m-d') <= \DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date']))) {
+            $this->flash->now('error', 'Select a future day');
             return false;
         }
+//            $this->flash->now('error','You already have an appointment on this day ');
+//            return false;
+//        }
         return true;
     }
+
     /**
      * @throws ValidationException
      */
     private
     function validateAppointment(ServerRequestInterface $request): array
-    {//\DateTime('today') > DateTime::createFromFormat('Y-m-d', $request->getParsedBody()['date'])\\\\\date('Y-m-d') <= date('Y-m-d')) $request->getParsedBody()['date'])
+    {
         return $this->validate($request, ['location' => ['required'], 'date' => ['required']]);
 
     }
